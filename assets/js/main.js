@@ -1,113 +1,94 @@
-jQuery(window).on('load', function() {
-	"use strict";
-    
-    
-    // HIDE PRELOADER
-    $(".preloader").addClass("hide-preloader");   
-    
-    // SHOW/ANIMATE ANIMATION CONTAINER
-    setTimeout(function(){
+(function($) {
+  
+  "use strict";  
 
-        $("#intro .animation-container").each(function() {
+  $(window).on('load', function() {
 
-            var e = $(this);
+    /* 
+   MixitUp
+   ========================================================================== */
+  $('#portfolio').mixItUp();
 
-            setTimeout(function(){
+  /* 
+   One Page Navigation & wow js
+   ========================================================================== */
+    var OnePNav = $('.onepage-nev');
+    var top_offset = OnePNav.height() - -0;
+    OnePNav.onePageNav({
+      currentClass: 'active',
+      scrollOffset: top_offset,
+    });
+  
+  /*Page Loader active
+    ========================================================*/
+    $('#preloader').fadeOut();
 
-                e.addClass("run-animation");
+  // Sticky Nav
+    $(window).on('scroll', function() {
+        if ($(window).scrollTop() > 200) {
+            $('.scrolling-navbar').addClass('top-nav-collapse');
+        } else {
+            $('.scrolling-navbar').removeClass('top-nav-collapse');
+        }
+    });
 
-            }, e.data("animation-delay") );
+    /* slicknav mobile menu active  */
+    $('.mobile-menu').slicknav({
+        prependTo: '.navbar-header',
+        parentTag: 'liner',
+        allowParentLinks: true,
+        duplicate: true,
+        label: '',
+        closedSymbol: '<i class="icon-arrow-right"></i>',
+        openedSymbol: '<i class="icon-arrow-down"></i>',
+      });
 
-        });
+      /* WOW Scroll Spy
+    ========================================================*/
+     var wow = new WOW({
+      //disabled for mobile
+        mobile: false
+    });
 
-    }, 700 );
+    wow.init();
 
-    
-});
+    /* Nivo Lightbox 
+    ========================================================*/
+    $('.lightbox').nivoLightbox({
+        effect: 'fadeScale',
+        keyboardNav: true,
+      });
+
+    /* Counter
+    ========================================================*/
+    $('.counterUp').counterUp({
+     delay: 10,
+     time: 1000
+    });
 
 
-jQuery(document).ready(function($) {
-	"use strict";
-    
-    
-    // SMOOTH SCROLL FOR SAME PAGE LINKS
-    $(document).on('click', 'a.smooth-scroll', function(event) {
-        
+    /* Back Top Link active
+    ========================================================*/
+      var offset = 200;
+      var duration = 500;
+      $(window).scroll(function() {
+        if ($(this).scrollTop() > offset) {
+          $('.back-to-top').fadeIn(400);
+        } else {
+          $('.back-to-top').fadeOut(400);
+        }
+      });
+
+      $('.back-to-top').on('click',function(event) {
         event.preventDefault();
-
         $('html, body').animate({
-            scrollTop: $( $.attr(this, 'href') ).offset().top - 80
-        }, 500);
-        
-    });
-    
-    
-    // SCROLL REVEAL SETUP
-    window.sr = ScrollReveal();
-    sr.reveal(".scroll-animated-from-right", { 
-        duration: 600,
-        delay: 0,
-        origin: "right",
-        rotate: { x: 0, y: 0, z: 0 },
-        opacity: 0,
-        distance: "20vh",
-        viewFactor: 0.4,
-        scale: 1,
-    });
-    
-    
-    // AJAX CONTACT FORM SUBMIT
-    $("#contact-form").submit(function(e) {
+          scrollTop: 0
+        }, 600);
+        return false;
+      });
 
-        e.preventDefault();
-        var postdata = $(this).serialize();
 
-        $.ajax({
 
-            type: "POST",
-            url: "assets/php/contact.php",
-            data: postdata,
-            dataType: "json",
-            success: function(json) {
+  });      
 
-                $("#contact-form input, #contact-form textarea").removeClass("error");
-
-                setTimeout(function(){
-
-                    if (json.nameMessage !== "") {
-
-                        $("#contact-form-name").addClass("error");
-
-                    }
-
-                    if (json.emailMessage !== "") {
-
-                        $("#contact-form-email").addClass("error");
-
-                    }
-
-                    if (json.messageMessage !== "") {
-
-                        $("#contact-form-message").addClass("error");
-
-                    }
-
-                }, 10);
-
-                if (json.nameMessage === "" && json.emailMessage === "" && json.messageMessage === "") {
-
-                    $("#contact-form.error input, #contact-form.error textarea").removeClass("error");
-                    $('#contact-form').addClass("success");
-                    $('#contact-form textarea, #contact-form input').attr("placeholder","");
-                    $('#contact-form input, #contact-form button, #contact-form textarea').val('').prop('disabled', true);
-
-                }
-
-            }
-
-        });
-
-    });
-
-    
-});
+}(jQuery));
